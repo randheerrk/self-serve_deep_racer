@@ -1,0 +1,21 @@
+running egg_info
+writing build/deep_racer_listener/deep_racer_listener.egg-info/PKG-INFO
+writing dependency_links to build/deep_racer_listener/deep_racer_listener.egg-info/dependency_links.txt
+writing entry points to build/deep_racer_listener/deep_racer_listener.egg-info/entry_points.txt
+writing requirements to build/deep_racer_listener/deep_racer_listener.egg-info/requires.txt
+writing top-level names to build/deep_racer_listener/deep_racer_listener.egg-info/top_level.txt
+reading manifest file 'build/deep_racer_listener/deep_racer_listener.egg-info/SOURCES.txt'
+writing manifest file 'build/deep_racer_listener/deep_racer_listener.egg-info/SOURCES.txt'
+running build
+running build_py
+running install
+/usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+  warnings.warn(
+running install_lib
+running install_data
+running install_egg_info
+removing '/target/deep_racer_listener/install/deep_racer_listener/lib/python3.10/site-packages/deep_racer_listener-0.0.0-py3.10.egg-info' (and everything under it)
+Copying build/deep_racer_listener/deep_racer_listener.egg-info to /target/deep_racer_listener/install/deep_racer_listener/lib/python3.10/site-packages/deep_racer_listener-0.0.0-py3.10.egg-info
+running install_scripts
+Installing deepracer_listener_node script to /target/deep_racer_listener/install/deep_racer_listener/lib/deep_racer_listener
+writing list of installed files to '/target/deep_racer_listener/build/deep_racer_listener/install.log'

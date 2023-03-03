@@ -1,0 +1,23 @@
+[0.994s] Invoking command in '/target/deep_racer_listener': PYTHONPATH=/target/deep_racer_listener/build/deep_racer_listener/prefix_override:/target/deep_racer_listener/install/deep_racer_listener/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base build/deep_racer_listener build --build-base /target/deep_racer_listener/build/deep_racer_listener/build install --record /target/deep_racer_listener/build/deep_racer_listener/install.log --single-version-externally-managed
+[1.319s] running egg_info
+[1.321s] writing build/deep_racer_listener/deep_racer_listener.egg-info/PKG-INFO
+[1.327s] writing dependency_links to build/deep_racer_listener/deep_racer_listener.egg-info/dependency_links.txt
+[1.332s] writing entry points to build/deep_racer_listener/deep_racer_listener.egg-info/entry_points.txt
+[1.337s] writing requirements to build/deep_racer_listener/deep_racer_listener.egg-info/requires.txt
+[1.340s] writing top-level names to build/deep_racer_listener/deep_racer_listener.egg-info/top_level.txt
+[1.359s] reading manifest file 'build/deep_racer_listener/deep_racer_listener.egg-info/SOURCES.txt'
+[1.368s] writing manifest file 'build/deep_racer_listener/deep_racer_listener.egg-info/SOURCES.txt'
+[1.370s] running build
+[1.371s] running build_py
+[1.376s] running install
+[1.377s] /usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+[1.378s]   warnings.warn(
+[1.379s] running install_lib
+[1.389s] running install_data
+[1.394s] running install_egg_info
+[1.397s] removing '/target/deep_racer_listener/install/deep_racer_listener/lib/python3.10/site-packages/deep_racer_listener-0.0.0-py3.10.egg-info' (and everything under it)
+[1.406s] Copying build/deep_racer_listener/deep_racer_listener.egg-info to /target/deep_racer_listener/install/deep_racer_listener/lib/python3.10/site-packages/deep_racer_listener-0.0.0-py3.10.egg-info
+[1.509s] running install_scripts
+[1.552s] Installing deepracer_listener_node script to /target/deep_racer_listener/install/deep_racer_listener/lib/deep_racer_listener
+[1.564s] writing list of installed files to '/target/deep_racer_listener/build/deep_racer_listener/install.log'
+[1.600s] Invoked command in '/target/deep_racer_listener' returned '0': PYTHONPATH=/target/deep_racer_listener/build/deep_racer_listener/prefix_override:/target/deep_racer_listener/install/deep_racer_listener/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base build/deep_racer_listener build --build-base /target/deep_racer_listener/build/deep_racer_listener/build install --record /target/deep_racer_listener/build/deep_racer_listener/install.log --single-version-externally-managed

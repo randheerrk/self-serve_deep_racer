@@ -1,0 +1,3 @@
+[console_scripts]
+deepracer_listener_node = deep_racer_listener.deepracer_listener:main
+
