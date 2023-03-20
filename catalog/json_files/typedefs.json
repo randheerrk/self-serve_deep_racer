@@ -1,0 +1,234 @@
+{
+    "enumDefs":[],
+    "structDefs":[],
+    "classificationDefs":[],
+    "entityDefs":[
+       {
+          "name":"domain",
+          "description":"Custom type for Autonomous Vehicle Domain",
+          "category":    "ENTITY",
+          "typeVersion": "1.0",
+          "attributeDefs":[
+            {
+                "name": "name",
+                "typeName": "string",
+                "cardinality": "SINGLE",
+                "isOptional": false,
+                "isUnique": true,
+                "isIndexable": true
+            },
+            {
+                "name": "create_time",
+                "typeName": "date",
+                "cardinality": "SINGLE",
+                "isOptional": false,
+                "isUnique": false,
+                "isIndexable": true
+            }]
+        },
+       {
+          "name": "node",
+          "description": "Custom type for Control Unit",
+          "category": "ENTITY",
+          "typeVersion": "1.0",
+          "attributeDefs": [
+            {
+                "name": "name",
+                "typeName": "string",
+                "cardinality": "SINGLE",
+                "isOptional": false,
+                "isUnique": true,
+                "isIndexable": true
+            },
+            {
+              "name": "create_time",
+              "typeName": "date",
+              "cardinality": "SINGLE",
+              "isOptional": false,
+              "isUnique": false,
+              "isIndexable": true
+            }
+          ]
+        },
+       {
+          "name": "type",
+          "description": "Custom type for Data Type",
+          "category": "ENTITY",
+          "typeVersion": "1.0",
+          "attributeDefs": [
+            {
+                "name": "name",
+                "typeName": "string",
+                "cardinality": "SINGLE",
+                "isOptional": false,
+                "isUnique": true,
+                "isIndexable": true
+            },
+            {
+              "name": "create_time",
+              "typeName": "date",
+              "cardinality": "SINGLE",
+              "isOptional": false,
+              "isUnique": false,
+              "isIndexable": true
+            },
+            {
+              "name": "info",
+              "typeName": "string",
+              "cardinality": "SINGLE",
+              "isOptional": false,
+              "isUnique": false,
+              "isIndexable": false
+            }
+          ]
+        },
+       {
+          "name": "communication_type",
+          "description": "Custom type for Communication",
+          "category": "ENTITY",
+          "typeVersion": "1.0",
+          "attributeDefs": [
+            {
+                "name": "name",
+                "typeName": "string",
+                "cardinality": "SINGLE",
+                "isOptional": false,
+                "isUnique": true,
+                "isIndexable": true
+            },
+            {
+              "name": "create_time",
+              "typeName": "date",
+              "cardinality": "SINGLE",
+              "isOptional": false,
+              "isUnique": false,
+              "isIndexable": true
+            }
+          ]
+        },
+       {
+          "name":"topic",
+          "description":"Custom type for Topic",
+          "category":    "ENTITY",
+          "typeVersion": "1.0",
+          "superTypes": ["communication_type"],
+          "attributeDefs":[
+            {
+                "name": "publisher_count",
+                "typeName": "int",
+                "cardinality": "SINGLE",
+                "isOptional": true,
+                "isUnique": false,
+                "isIndexable": false
+            },
+            {
+                "name": "subscriber_count",
+                "typeName": "int",
+                "cardinality": "SINGLE",
+                "isOptional": true,
+                "isUnique": false,
+                "isIndexable": false
+            }
+          ]
+        },
+       {
+          "name": "action",
+          "description": "Custom type for Action",
+          "category": "ENTITY",
+          "typeVersion": "1.0",
+          "superTypes": ["communication_type"],
+          "attributeDefs": [
+            {
+              "name": "action_servers",
+              "typeName": "string",
+              "cardinality": "SINGLE",
+              "isOptional": false,
+              "isUnique": false,
+              "isIndexable": true
+            },
+            {
+              "name": "action_clients",
+              "typeName": "string",
+              "cardinality": "SINGLE",
+              "isOptional": false,
+              "isUnique": false,
+              "isIndexable": true
+            }
+          ]
+        },
+       {
+          "name": "service",
+          "description": "Custom type for Service",
+          "category": "ENTITY",
+          "typeVersion": "1.0",
+          "superTypes": ["communication_type"]
+       }
+      ],
+      "relationshipDefs": [{
+          "name":                 "contains",
+          "typeName":             "contains",
+          "description":          "node's of Vehicle domain",
+          "category":             "RELATIONSHIP",
+          "typeVersion":          "1.0",
+          "relationshipCategory": "COMPOSITION",
+          "propagateTags":        "NONE",
+          "endDef1":              { "name": "domain", "type": "node",    "cardinality": "SINGLE", "isContainer": false, "isLegacyAttribute": false },
+          "endDef2":              { "name": "node", "type": "domain", "cardinality": "SET", "isContainer": true,  "isLegacyAttribute": false }
+        },
+        {
+          "name":                 "publishes",
+          "description":          "Topic used for publishing data",
+          "category":             "RELATIONSHIP",
+          "typeVersion":          "1.0",
+          "relationshipCategory": "COMPOSITION",
+          "propagateTags":        "NONE",
+          "endDef1":              { "name": "node",   "type": "topic", "cardinality": "SINGLE", "isContainer": false, "isLegacyAttribute": false },
+          "endDef2":              { "name": "topic", "type": "node",  "cardinality": "SET",    "isContainer": true,  "isLegacyAttribute": false }
+        },
+        {
+          "name":                 "provides",
+          "typeName":             "provides",
+          "description":          "Service used by the node",
+          "category":             "RELATIONSHIP",
+          "typeVersion":          "1.0",
+          "relationshipCategory": "COMPOSITION",
+          "propagateTags":        "NONE",
+          "endDef1":              { "name": "node",   "type": "service", "cardinality": "SINGLE", "isContainer": false, "isLegacyAttribute": false },
+          "endDef2":              { "name": "service", "type": "node",  "cardinality": "SET",    "isContainer": true,  "isLegacyAttribute": false }
+        },
+        {
+          "name":                 "performs",
+          "typeName":             "performs",
+          "description":          "Action used by the node",
+          "category":             "RELATIONSHIP",
+          "typeVersion":          "1.0",
+          "relationshipCategory": "COMPOSITION",
+          "propagateTags":        "NONE",
+          "endDef1":              { "name": "node",   "type": "action", "cardinality": "SINGLE", "isContainer": false, "isLegacyAttribute": false },
+          "endDef2":              { "name": "action", "type": "node",  "cardinality": "SET",    "isContainer": true,  "isLegacyAttribute": false }
+        },
+        {
+          "name":                 "supports",
+          "typeName":             "supports",
+          "description":          "Data Type of Topic",
+          "category":             "RELATIONSHIP",
+          "typeVersion":          "1.0",
+          "relationshipCategory": "COMPOSITION",
+          "propagateTags":        "NONE",
+          "endDef1":              { "name": "type",   "type": "topic", "cardinality": "SINGLE", "isContainer": false, "isLegacyAttribute": false },
+          "endDef2":              { "name": "topic", "type": "type",  "cardinality": "SET",    "isContainer": true,  "isLegacyAttribute": false }
+        },
+        {
+          "name":                 "accepts",
+          "typeName":             "accepts",
+          "description":          "Data Type of Service and Action",
+          "category":             "RELATIONSHIP",
+          "typeVersion":          "1.0",
+          "relationshipCategory": "COMPOSITION",
+          "propagateTags":        "NONE",
+          "endDef1":              { "name": "type",   "type": "communication_type", "cardinality": "SINGLE", "isContainer": false, "isLegacyAttribute": false },
+          "endDef2":              { "name": "communication_type", "type": "type",  "cardinality": "SET",    "isContainer": true,  "isLegacyAttribute": false }
+        }
+      ],
+      "businessMetadataDefs": []
+    }

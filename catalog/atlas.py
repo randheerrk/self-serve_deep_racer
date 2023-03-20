@@ -17,7 +17,8 @@ class AtlasHelper :
 
     def createTypes(self) :
         with open("./json_files/typedefs.json") as json_file :
-            typedef = type_coerce(json.load(json_file), AtlasTypesDef)
+            type_defs = json.load(json_file)
+            typedef = type_coerce(type_defs, AtlasTypesDef)
             self.typesDef = self.__create(typedef)
 
     def createEntity(self, entity_data):

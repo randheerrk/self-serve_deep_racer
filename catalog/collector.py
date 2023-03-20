@@ -36,14 +36,27 @@ class DataCollector:
             "domain": {},
             "node": {},
             "topic": {},
-            "type": {}
+            "type": {},
+            "action": {},
+            "service": {}
         }
-        self.node_domain_mapping = {}
 
-    def collect(self):
+    def get_data(self):
         self._domain_data()
-        self._sensor_data()
+        self._node_info()
         return self._data
+    
+    def _domain_data(self) :
+        self._data["domain"]["default_domain"] = {
+            "entity": {
+                "typeName": "domain",
+                "attributes": {
+                    "name": "default_domain",
+                    "create_time": time.time()
+                }
+            }
+        }
+
 
     def _type_info(self, _type):
         if _type not in self._data['type']:
@@ -59,77 +72,91 @@ class DataCollector:
                 }
             }
 
-    def _domain_data(self) :
-        for key in DOMAIN_COMPONENTS :
-            for node in DOMAIN_COMPONENTS[key] :
-                self.node_domain_mapping[node] = key
-            self._data["domain"][key] = {
-                "entity": {
-                    "typeName": "domain",
-                    "attributes": {
-                        "name": key,
-                        "create_time": time.time()
+    def _node_info(self):
+        nodes = set(run_command('ros2 node list'))
+        nodes.add("default_node")
+        node_info = {
+            "topics": set(),
+            "actions": set(),
+            "services": set()
+        }
+        for node in nodes:
+            if node not in self._data['node']:
+                self._data['node'][node] = {"entity": {
+                    "typeName": "node",
+                    "attributes": {"name": node, "create_time": time.time()},
+                    "relationshipAttributes": {
+                        "domain": {"typeName": "domain", "uniqueAttributes": {"name": "default_domain"}}
                     }
-                }
-            }
+                }}
 
-    def _node_data(self) :
-        nodes = run_command('ros2 node list')
-        for node in nodes :
-            node_info = {
-                "name":node,
-                "create_time": time.time(),
-            }
-            topics, services, actions = _parse_node_output(node)
-            self._topic_data(node, topics)
-            # self._service_info(node, services)
-            # self._action_info(node, actions)
-    
-    def _topic_data(self, node, topics):
-        for topic, _type in topics:
-            self._type_info(_type)
+            _output = run_command("ros2 node info " + node)
+            key = ""
+            _type = ""
+            for line in _output:
+                if "Subscribers:" in line or "Publishers:" in line:
+                    key = "topics"
+                    _type = line.replace(':', '').strip().replace(' ', '_').lower()
+                elif "Service Servers:" in line or "Service Clients:" in line:
+                    key = "services"
+                    _type = line.replace(':', '').strip().replace(' ', '_').lower()
+                elif "Action Servers:" in line or "Action Clients:" in line:
+                    key = "actions"
+                    _type = line.replace(':', '').strip().replace(' ', '_').lower()
+                else:
+                    if len(line) > 0 and line != node:
+                        node_info[key].add((line, _type))
+        self._topic_info(node_info["topics"], node)
+        self._action_info(node_info["actions"], node)
+        self._service_info(node_info["services"], node)
+
+    def _topic_info(self, topics, node):
+        for itr, node_type in topics:
+            topic, _type = itr.strip(" ").split(': ')
 
             output_lines = run_command('ros2 topic info ' + topic)
+            node_type = 'publishing' if node_type == 'publishers' else 'subscribing'
             topic_info = {
-                "name": topic,
+                "name": f'{node_type}_{topic}',
                 "create_time": time.time()
             }
-            _type = ""
+            self._type_info(_type)
             for line in output_lines:
                 if "Publisher count" in line:
                     topic_info["publisher_count"] = line.split(": ")[1]
                 elif "Subscription count" in line:
                     topic_info["subscriber_count"] = line.split(": ")[1]
+
             if topic not in self._data['topic']:
                 self._data['topic'][topic] = {"entity": {
                     "typeName": "topic",
                     "attributes": topic_info,
                     "relationshipAttributes": {
-                        "node": {"typeName": "node", "uniqueAttributes": {"name": node}},
+                        "ecu": {"typeName": "ecu", "uniqueAttributes": {"name": node}},
                         "type": {"typeName": "type", "uniqueAttributes": {"name": _type}}
                     }
                 }}
 
-    def _service_info(self, node, services):
-        for service, _type in services:
+    def _service_info(self, services, node):
+        for itr, node_type in services:
+            service, _type = itr.strip(" ").split(': ')
             self._type_info(_type)
             if service not in self._data['service']:
                 self._data['service'][service] = {"entity": {
                     "typeName": "service",
-                    "attributes": {"name": f'{node_type[:-1]}_{name}', "create_time": time.time()},
+                    "attributes": {"name": f'{node_type[:-1]}_{service}', "create_time": time.time()},
                     "relationshipAttributes": {
-                        "node": {"typeName": "node", "uniqueAttributes": {"name": node}},
+                        "ecu": {"typeName": "ecu", "uniqueAttributes": {"name": node}},
                         "type": {"typeName": "type", "uniqueAttributes": {"name": _type}}
                     }
                 }}
 
-    def _action_info(self, node, actions):
+    def _action_info(self, actions, node):
         for itr, node_type in actions:
             action, _type = itr.strip(" ").split(': ')
-            _, node, name = _strip_name(action)
             _output = run_command('ros2 action info ' + action)
             self._type_info(_type)
-            action_info = {"name": f'{node_type[:-1]}_{name}', "create_time": time.time()}
+            action_info = {"name": f'{node_type[:-1]}_{action}', "create_time": time.time()}
             for line in _output:
                 if "Action clients" in line:
                     action_info["action_clients"] = line.split(": ")[1]
@@ -141,7 +168,7 @@ class DataCollector:
                     "typeName": "action",
                     "attributes": action_info,
                     "relationshipAttributes": {
-                        "node": {"typeName": "node", "uniqueAttributes": {"name": node}},
+                        "ecu": {"typeName": "ecu", "uniqueAttributes": {"name": node}},
                         "type": {"typeName": "type", "uniqueAttributes": {"name": _type}}
                     }
                 }}

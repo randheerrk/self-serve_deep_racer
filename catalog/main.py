@@ -11,16 +11,16 @@ helper = None
 conn = None
 LOG = logging.getLogger('AV Tech Data Catalogging')
 
-
 def init_atlas():
     try :
-        client = AtlasClient('http://10.3.0.6:21000', ('admin', 'admin'))
+        client = AtlasClient('http://3.237.183.27:21000', ('admin', 'admin'))
         global helper
         helper = AtlasHelper(client)
         helper.createTypes()
         LOG.info("Connected to Apache Atlas server")
     except Exception as e :
         LOG.error("Error while connecting to Atlas server, %s", e)
+        raise e
 
 
 def init_db():
@@ -66,7 +66,7 @@ def run():
     clear_database()
     entities_info = DataCollector().collect()
     json.dump(entities_info, open('out', 'w'))
-    for entity in ["type", "domain", "sensor", "topic"]:
+    for entity in ["type", "domain", "node", "topic", "service", "action"]:
         for name, info in entities_info[entity].items():
             guid = helper.createEntity(info)
             add_to_database(guid, name)
